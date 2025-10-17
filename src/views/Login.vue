@@ -30,6 +30,7 @@
             </el-form>
         </el-col>
     </el-row>
+
 </template>
 
 <script>
@@ -68,6 +69,9 @@
                                 console.log("用户点击登录时，提交的随机码：",jwt)
                                 this.$store.commit('SET_TOKEN',jwt)
                                 this.$router.push("/index")
+                            })
+                            .catch(error =>{
+                                console.log('登录失败',error)
                             })
                         } else {
                             console.log('error submit!!');
