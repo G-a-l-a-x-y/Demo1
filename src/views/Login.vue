@@ -20,7 +20,7 @@
                 </el-form-item>
                 <el-form-item label="验证码" prop="code">
                     <el-input v-model="loginForm.code" style="width: 260px;float: left;"></el-input>
-                    <el-image ></el-image>
+                    <el-image :src="codeImg" class="codeImg"></el-image>
                 </el-form-item>
 
                 <el-form-item style="float:left;position:relative;left:10%;margin-top: 30px">
@@ -40,7 +40,8 @@
                 loginForm: {
                     username: '',
                     password:'',
-                    code:''
+                    code:'',
+                    token:''
                 },
                 rules:{
                   username:[{
@@ -53,23 +54,45 @@
                         {required:true, message:'请输入验证码', trigger:'blur'},
                         {min:5,max:5,message: '长度为5个字符',trigger:'blur'}
                         ]
-                }
-            }
+                },
+                codeImg:''
+            };
         },
         methods: {
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        alert('submit!');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            this.$axios.post('/login', this.loginForm).then(({headers,data}) =>{
+                                console.log("headers:",headers)
+                                const jwt = data.headers['authorization'] || data.headers['Authorization']
+                                console.log("用户点击登录时，提交的随机码：",jwt)
+                                this.$store.commit('SET_TOKEN',jwt)
+                                this.$router.push("/index")
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+            },
+            getCaptcha(){
+                this.$axios.get('/captcha').then(res =>{
+                    if(res.data && res.data.data){
+                        this.loginForm.token = res.data.data.token || ''
+                        console.log("mock (模拟服务器生成的随机码：)",this.loginForm.token)
+                        this.codeImg = res.data.data.captchaImg
+                    }
+                })
+                .catch(error =>{
+                    console.log('获取验证码失败：',error)
+                })
             }
+        },
+        created() {
+            this.getCaptcha()
         }
     }
 </script>
