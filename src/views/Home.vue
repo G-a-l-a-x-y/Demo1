@@ -27,7 +27,10 @@
 
             </el-header>
 
-            <el-main><router-view></router-view></el-main>
+            <el-main>
+                <tabs></tabs>
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </el-container>
 
@@ -35,10 +38,12 @@
 
 <script>
     import SideMenu from "./Inc/SideMenu";
+    import Tabs from "./Inc/Tabs";
+
     export default {
         name: "Home",
         components:{
-            SideMenu
+            SideMenu,Tabs
         },
         data(){
             return{
@@ -66,7 +71,7 @@
                     this.$store.commit("resetState")
 
 
-                    this.$router.push("/login")
+                    this.$router.push("/login").catch(()=>{});
                 })
             }
         }
@@ -115,7 +120,7 @@
     .el-main {
         color: #333;
         text-align: center;
-        line-height: 160px;
+        padding: 0;
     }
 
     .font-style{

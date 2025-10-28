@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Index from "../views/Index.vue";
 import Menu from "../views/sys/Menu.vue";
-import Role from "../views/sys/Role";
-import User from "../views/sys/User";
+import Role from "../views/sys/Role.vue";
+import User from "../views/sys/User.vue";
 import axios from "axios";
 import store from "../store";
-
+import menu from "@/store/modules/menu";
 
 Vue.use(VueRouter)
 
@@ -59,19 +59,24 @@ const routes = [
 const router = new VueRouter({
   routes
 })
-router.beforeEach((to, from , next ) => {
+router.beforeEach((to, from ,
+                   next ) => {
   let hasRoute=store.state.menu.hasRoute
-  if(!hasRoute){
+  let token =localStorage.getItem("token")
+  if(to.path=='/login'){
+    next()
+  }else if(!token){
+    next({path:'/login'})
+  }
+  if(token && !hasRoute){
 
     axios.get("/sys/menu/nav", {
       headers: {
         Authorization: localStorage.getItem("token")
       }
     }).then(res => {
-      console.log("路由中响应了的数据：", res.data.data.nav)
       store.commit("setMenuList", res.data.data.nav)
       store.commit("setPermList", res.data.data.authoritys)
-      console.log("是否set到store中：", store.state.menu.menuList)
 
       let newRouters = router.options.routes
       res.data.data.nav.forEach(menu => {
@@ -90,8 +95,6 @@ router.beforeEach((to, from , next ) => {
 
         hasRoute=true
         store.commit("changeRouteState",hasRoute)
-
-        store.commit("changeRouteState", hasRoute)
       })
 
     })
