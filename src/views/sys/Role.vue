@@ -68,7 +68,7 @@
                     label="操作"
             >
                 <template slot-scope="scope">
-                    <el-button type="text" @click="editHandle(scope.row.id)">分配权限</el-button>
+                    <el-button type="text" @click="permHandle(scope.row.id)">分配权限</el-button>
                     <el-divider direction="vertical"></el-divider>
                     <el-button type="text" @click="editHandle(scope.row.id)">编辑</el-button>
                     <el-divider direction="vertical"></el-divider>
@@ -129,6 +129,23 @@
             </el-form>
 
         </el-dialog>
+        <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
+            <el-form :model="permForm">
+                <el-tree
+                        :data="permTreedata"
+                        show-checkbox
+                        ref="permTree"
+                        :default-expand-all=true
+                        node-key="id"
+                        :check-strictly=true
+                        :props="defaultProps">
+                </el-tree>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="permDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="submitPermFormHandle('permForm')">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -143,7 +160,8 @@
                 size:10,
                 current:1,
                 dialogVisible:false,
-                editForm:{
+                editForm:{},
+                editFormRules: {
                     name:[
                         {required:true,message:'请输入角色名称',trigger:'blur'}
                     ],
@@ -153,17 +171,23 @@
                     statu:[
                         {required:true,message:'请选择状态',trigger:'blur'}
                     ]
-
-
                 },
-                editFormRules: {
-
+                tableData: [],
+                multipleSelection:[],
+                permDialogVisible:false,
+                permForm:{},
+                defaultProps:{
+                    children:'children',
+                    label:'name'
                 },
-                tableData: []
+                permTreedata:[]
             }
         },
         created() {
-            this.getRoleList()
+            this.getRoleList(),
+            this.$axios.get('/sys/menu/list').then(res=>{
+                this.permTreedata=res.data.data
+            })
         },
         methods: {
             toggleSelection(rows) {
@@ -267,6 +291,30 @@
                         }
                     })
                 })
+            },
+            submitPermFormHandle(formName) {
+                var menuIds = this.$refs.permTree.getCheckedKeys()
+                console.log("提交时的勾选的菜单id:", menuIds)
+                this.$axios.post(url + '/sys/role/perm/' + this.permForm.id, menuIds).then(res => {
+                    this.$message({
+                        showClose: true,
+                        message: '恭喜,操作成功',
+                        type: 'success',
+                        onClose: () => {
+                            this.getRoleList()
+                        }
+                    })
+                    this.permDialogVisible = false
+                })
+            },
+            permHandle(id) {
+                this.permDialogVisible = true;
+                this.$nextTick(() => {
+                    this.$axios.get('/sys/role/info/' + id).then(res => {
+                        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
+                        this.permForm = res.data.data;
+                    });
+                });
             }
         }
     }
