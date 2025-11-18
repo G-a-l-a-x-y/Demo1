@@ -34,6 +34,7 @@
 </template>
 
 <script>
+    import request from '@/axios.js'
     export default {
         name: "Login",
         data() {
@@ -63,7 +64,7 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            this.$axios.post('/login', this.loginForm).then(({headers,data}) =>{
+                            request.post('/login', this.loginForm).then(({headers,data}) =>{
                                 console.log("headers:",headers)
                                 const jwt = data.headers['authorization'] || data.headers['Authorization']
                                 console.log("用户点击登录时，提交的随机码：",jwt)
@@ -83,7 +84,7 @@
                 this.$refs[formName].resetFields();
             },
             getCaptcha(){
-                this.$axios.get('/captcha').then(res =>{
+                request.get('/captcha').then(res =>{
                     if(res.data && res.data.data){
                         this.loginForm.token = res.data.data.token || ''
                         console.log("mock (模拟服务器生成的随机码：)",this.loginForm.token)
