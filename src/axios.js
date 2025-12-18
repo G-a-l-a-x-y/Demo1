@@ -2,7 +2,7 @@ import axios from"axios";
 import router from "./router";
 import Element from "element-ui"
 
-axios.defaults.baseURL = "http://localhost:8080"
+axios.defaults.baseURL = "http://localhost:8081"
 
 
 // 创建一个自定义的axios实例，用于统一配置请求参数

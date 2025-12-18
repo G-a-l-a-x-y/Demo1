@@ -22,29 +22,32 @@
         },
         computed:{
             editableTabs:{
-                get(){
+                get() {
                     return this.$store.state.menu.editableTabs
                 },
-                set(val){
-                    this.$store.state.menu.editableTabs=val
+                set(val) {
+                    this.$store.state.menu.editableTabs =val
                 }
             },
             editableTabsValue:{
                 get(){
                     return this.$store.state.menu.editableTabsValue
                 },
-                set(val){
-                    this.$store.state.menu.editableTabsValue=val
+                set(val) {
+                    this.$store.state.menu.editableTabsValue =val
                 }
             }
         },
         methods: {
+
             removeTab(targetName) {
-                let tabs=this.editableTabs;
-                let activeName=this.editableTabsValue;
-                if(targetName==='Index'){
+                let tabs = this.editableTabs;
+                let activeName = this.editableTabsValue;
+
+                if (targetName === 'Index'){
                     return
                 }
+
                 if (activeName === targetName) {
                     tabs.forEach((tab, index) => {
                         if (tab.name === targetName) {
@@ -58,15 +61,15 @@
 
                 this.editableTabsValue = activeName;
                 this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-                if(this.$route.name!==activeName){
-                    this.$router.push({name:activeName}).catch(err=>{
+
+                if (this.$route.name !== activeName) {
+                    this.$router.push({name: activeName}).catch(err => {
                     })
                 }
             },
-
             clickTab(target){
-                if(this.$route.name!==target.name){
-                    this.$router.push({name:target.name})
+                if (this.$route.name !== target.name){
+                    this.$router.push({name: target.name})
                 }
             }
         }

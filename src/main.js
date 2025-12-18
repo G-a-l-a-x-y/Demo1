@@ -2,18 +2,18 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Element from "element-ui"
+import Elemnet from "element-ui"
 import "element-ui/lib/theme-chalk/index.css"
-import axios from "axios";
-import global from './globalFun.js'
+import global from './globalFun'
 
-Vue.prototype.$axios = axios;
+import axios from './axios.js'
+Vue.prototype.$axios = axios
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 //require("./mock.js")
 
-Vue.use(Element)
+Vue.use(Elemnet)
 
 new Vue({
   router,

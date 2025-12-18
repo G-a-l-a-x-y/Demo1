@@ -7,12 +7,12 @@
         </el-col>
 
         <el-col :x1="{span: 1, offset: 1 }" :lg="{span: 1, offset: 1 }" >
-        <el-divider direction="vertical"></el-divider>
+            <el-divider direction="vertical"></el-divider>
 
         </el-col>
 
         <el-col :x1="{span: 10, offset: 1 }" :lg="{span: 10, offset: 1 }" style="float:right;position: relative;right:5%">
-        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-loginForm">
+            <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-loginForm">
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="loginForm.username" style="width: 390px;float: left;"></el-input>
                 </el-form-item>
@@ -40,9 +40,9 @@
         data() {
             return {
                 loginForm: {
-                    username: 'admin',
-                    password: '123456',
-                    code: '12345',
+                    username: '',
+                    password: '',
+                    code: '',
                     token:''
                 },
                 rules: {
@@ -65,13 +65,23 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.$axios.post('/login?',qs.stringify(this.loginForm)).then(res =>{
+                        this.$axios.post('/login?', qs.stringify(this.loginForm),{headers:{
+                                'Content-Type':'application/x-www-form-urlencoded'
+                            }}).then(res =>{
                             //console.log("headers:",headers)
-                            const jwt = res.headers['authorization']
+                            const jwt = res.headers['authorization'] || res.headers['Authorization']
+                            console.log("用户点击登录时，提交的随机码:",jwt)
                             this.$store.commit('SET_TOKEN',jwt)
-                            this.$router.push('/index')
+                            this.$router.push("/index")
                         })
-                    } else {
+                            .catch(error =>{
+                                console.log('登录失败：',error)
+                                this.getCaptcha()
+                            })
+                    }
+
+
+                    else {
                         console.log('error submit!!');
                         return false;
                     }
@@ -89,9 +99,9 @@
                         this.loginForm.code =''
                     }
                 })
-                .catch(error =>{
-                    console.log('获取验证码失败:',error)
-                })
+                    .catch(error =>{
+                        console.log('获取验证码失败:',error)
+                    })
             }
         },
         created() {

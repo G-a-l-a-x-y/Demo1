@@ -108,7 +108,7 @@ Mock.mock('/sys/menu/nav', 'get', () => {
             ]
         }
     ];
-    let authoritys = ["sys:user:save","sys:user:list","sys:user:delete"];
+    let authoritys = ["sys:user:list"];
     response.data ={
         nav:nav,
         authoritys:authoritys

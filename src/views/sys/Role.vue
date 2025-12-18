@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form inline="true">
+        <el-form :inline="true">
             <el-form-item>
                 <el-input v-model="searchForm.name" placeholder="名称" clearable/>
             </el-form-item>
@@ -10,16 +10,17 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="dialogVisible=true">新增</el-button>
+                <el-button type="primary" @click="dialogVisible = true">新增</el-button>
             </el-form-item>
 
             <el-form-item>
                 <el-popconfirm @confirm="delHandle(null)" title="确定批量删除吗？">
                     <el-button type="danger" slot="reference" :disabled="delState">批量删除</el-button>
                 </el-popconfirm>
-            </el-form-item>
-        </el-form>
 
+            </el-form-item>
+
+        </el-form>
         <el-table
                 ref="multipleTable"
                 :data="tableData"
@@ -33,54 +34,54 @@
                     width="55">
             </el-table-column>
 
-
-
             <el-table-column
                     prop="name"
                     label="名称"
-                    width="120"
-            ></el-table-column>
-
+                    width="120">
+            </el-table-column>
             <el-table-column
                     prop="code"
                     label="唯一编码"
-                    show-overflow-tooltip
-            ></el-table-column>
-
+                    show-overflow-tooltip>
+            </el-table-column>
             <el-table-column
                     prop="remark"
                     label="描述"
-                    show-overflow-tooltip
-            ></el-table-column>
+                    show-overflow-tooltip>
+            </el-table-column>
 
             <el-table-column
-                    prop="status"
-                    label="状态"
-            >
-                <template slot-scope="scope">
-                    <el-tag size="small" v-if="scope.row.status === 1" type="success">正常</el-tag>
-                    <el-tag size="small" v-else-if="scope.row.status === 0" type="danger">禁用</el-tag>
-                </template>
+                    prop="statu"
+                    label="状态">
+                 <template slot-scope="scope">
+                     <el-tag size="small" v-if="scope.row.statu === 1" type="success">正常</el-tag>
+                     <el-tag size="small" v-else-if="scope.row.statu === 0" type="danger">禁用</el-tag>
+                 </template>
+
             </el-table-column>
 
             <el-table-column
                     prop="Operate"
-                    label="操作"
-            >
-                <template slot-scope="scope">
-                    <el-button type="text" @click="permHandle(scope.row.id)">分配权限</el-button>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button type="text" @click="editHandle(scope.row.id)">编辑</el-button>
-                    <el-divider direction="vertical"></el-divider>
-                    <template>
-                        <el-popconfirm @confirm="delHandle(scope.row.id)" title="确定删除吗？">
-                            <el-button type="text" slot="reference">删除</el-button>
-                        </el-popconfirm>
-                    </template>
-                </template>
-            </el-table-column>
+                    label="操作">
+            <template slot-scope="scope">
 
+                <el-button type="text" @click="permHandle(scope.row.id)">分配权限</el-button>
+                <el-divider direction="vertical"></el-divider>
+
+                <el-button type="text" @click="editHandle(scope.row.id)">编辑</el-button>
+                <el-divider direction="vertical"></el-divider>
+
+                <template>
+                    <el-popconfirm @confirm="delHandle(scope.row.id)"
+                                   title="确定删除吗？"
+                    >
+                        <el-button type="text" slot="reference">删除</el-button>
+                    </el-popconfirm>
+                </template>
+            </template>
+            </el-table-column>
         </el-table>
+
         <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
@@ -104,7 +105,7 @@
                     <el-input v-model="editForm.name" autocomplete="off"></el-input>
                 </el-form-item>
 
-                <el-form-item label="唯一编码" prop="code" label-width="100px">
+                <el-form-item label="统一编码" prop="code" label-width="100px">
                     <el-input v-model="editForm.code" autocomplete="off"></el-input>
                 </el-form-item>
 
@@ -129,6 +130,7 @@
             </el-form>
 
         </el-dialog>
+
         <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
             <el-form :model="permForm">
                 <el-tree
@@ -141,11 +143,13 @@
                         :props="defaultProps">
                 </el-tree>
             </el-form>
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="permDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="submitPermFormHandle('permForm')">确定</el-button>
+                <el-button type="primary" @click="sumbitPermFormHandle('permForm')">确定</el-button>
             </span>
         </el-dialog>
+
     </div>
 </template>
 
@@ -153,27 +157,29 @@
     export default {
         name: "Role.vue",
         data(){
-            return{
+            return {
                 searchForm:{},
                 delState:true,
                 total:0,
                 size:10,
                 current:1,
                 dialogVisible:false,
-                editForm:{},
+                editForm:{
+
+                },
                 editFormRules: {
                     name:[
-                        {required:true,message:'请输入角色名称',trigger:'blur'}
+                        {required: true, message:'请输入角色名称', trigger:'blur'}
                     ],
                     code:[
-                        {required:true,message:'请输入唯一编码',trigger:'blur'}
+                        {required: true, message:'请输入统一编码', trigger:'blur'}
                     ],
                     statu:[
-                        {required:true,message:'请选择状态',trigger:'blur'}
+                        {required: true, message:'请选择状态', trigger:'blur'}
                     ]
                 },
                 tableData: [],
-                multipleSelection:[],
+                multipleSelection: [],
                 permDialogVisible:false,
                 permForm:{},
                 defaultProps:{
@@ -184,10 +190,11 @@
             }
         },
         created() {
-            this.getRoleList(),
-            this.$axios.get('/sys/menu/list').then(res=>{
-                this.permTreedata=res.data.data
-            })
+            this.getRoleList()
+            //this.$axios.get('/sys/menu/list').then(res =>{
+                //this.permTreedata = res.data.data
+            //}).catch(err =>{})
+
         },
         methods: {
             toggleSelection(rows) {
@@ -201,40 +208,40 @@
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                this.delState =val.length==0
+                this.delState = val.length == 0
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
-                this.size=val
+                this.size = val
                 this.getRoleList()
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
-                this.current=val
+                this.current = val
                 this.getRoleList()
             },
-            resetForm(formName){
+            resetForm(formName)  {
                 this.$refs[formName].resetFields();
 
-                this.editForm={}
+                this.editForm ={}
             },
             handleClose(){
-                this.dialogVisible=false
+                this.dialogVisible = false
                 this.resetForm('editForm')
             },
             getRoleList(){
-              this.$axios.get('/sys/role/list',{
-                  params:{
-                      name:this.searchForm.name,
-                      current:this.current,
-                      size:this.size
-                  }
-              }).then(res=>{
-                  this.tableData=res.data.data.records
-                  this.size=res.data.data.size
-                  this.current=res.data.data.current
-                  this.total=res.data.data.total
-              })
+                this.$axios.get('/sys/role/list',{
+                    params:{
+                        name:this.searchForm.name,
+                        current:this.current,
+                        size:this.size
+                    }
+                }).then(res =>{
+                    this.tableData =res.data.data.records
+                    this.size =res.data.data.size
+                    this.current =res.data.data.current
+                    this.total =res.data.data.total
+                })
             },
             submitForm(formName){
                 this.$refs[formName].validate((valid) => {
@@ -249,7 +256,7 @@
                                         this.getRoleList()
                                     }
                                 });
-                                this.dialogVisible=false
+                                this.dialogVisible = false
                                 this.resetForm('editForm')
 
                             })
@@ -265,37 +272,37 @@
                 });
             },
             editHandle(id){
-                this.$axios.get("/sys/role/info/"+id).then(res=>{
-                    this.editForm=res.data.data
-                    this.dialogVisible=true
+                this.$axios.get('/sys/role/info/'+id).then(res =>{
+                    this.editForm = res.data.data
+                    this.dialogVisible = true
                 })
             },
             delHandle(id){
-                var ids=[]
+                var ids =[]
                 if(id){
                     console.log("if:",id)
                     ids.push(id)
-                }else {
-                    this.multipleSelection.forEach(row=>{
+                }else{
+                    this.multipleSelection.forEach(row =>{
                         ids.push(row.id)
                     })
                 }
                 console.log("ids:",ids)
-                this.$axios.post('/sys/role/delete/'+ids).then(res=>{
+                this.$axios.post('/sys/role/delete/',ids).then(res =>{
                     this.$message({
-                        showClose:true,
-                        message:'删除成功',
-                        type:'success',
+                        showClose: true,
+                        message: '删除成功',
+                        type: 'success',
                         onClose:()=>{
                             this.getRoleList()
                         }
-                    })
-                })
+                    });
+                }).catch(err =>{})
             },
-            submitPermFormHandle(formName) {
+            sumbitPermFormHandle(formName) {
                 var menuIds = this.$refs.permTree.getCheckedKeys()
                 console.log("提交时的勾选的菜单id:", menuIds)
-                this.$axios.post(url + '/sys/role/perm/' + this.permForm.id, menuIds).then(res => {
+                this.$axios.post('/sys/role/perm/' + this.permForm.id, menuIds).then(res => {
                     this.$message({
                         showClose: true,
                         message: '恭喜,操作成功',
@@ -307,14 +314,19 @@
                     this.permDialogVisible = false
                 })
             },
-            permHandle(id) {
-                this.permDialogVisible = true;
-                this.$nextTick(() => {
-                    this.$axios.get('/sys/role/info/' + id).then(res => {
-                        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-                        this.permForm = res.data.data;
-                    });
-                });
+            permHandle(id){
+                this.permDialogVisible = true
+
+                this.$axios.get('/sys/menu/list').then(res =>{
+                    this.permTreedata = res.data.data
+                }).catch(err =>{})
+
+                this.$nextTick(() =>{
+                    this.$axios.get('/sys/role/info/' + id).then(res =>{
+                        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds)
+                        this.permForm = res.data.data
+                    })
+                })
             }
         }
     }
@@ -322,7 +334,8 @@
 
 <style scoped>
     .el-pagination{
-        float: right;
+        float:right;
         margin-top: 25px;
     }
+
 </style>

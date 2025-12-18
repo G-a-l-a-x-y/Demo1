@@ -12,7 +12,7 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_TOKEN:(state ,token)=>{
-      console.log("localStorage中储存的随机码：",token)
+      console.log("localStorage中存储的随机码：",token)
       state.token = token
       localStorage.setItem("token",token)
     },

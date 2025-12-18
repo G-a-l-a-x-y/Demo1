@@ -10,8 +10,8 @@ export default {
         hasRoute:false,
         editableTabsValue:'Index',
         editableTabs:[{
-            title:'首页',
-            name:'Index'
+            title: '首页',
+            name: 'Index',
         }]
     },
     mutations: {
@@ -22,32 +22,32 @@ export default {
             state.permList = perms
         },
         changeRouteState(state,hasRoute){
-             state.hasRoute = hasRoute
-             sessionStorage.setItem("hasRoute",hasRoute)
+            state.hasRoute = hasRoute
+            sessionStorage.setItem("hasRoute",hasRoute)
         },
-        addTab(state,tab){
+        addTab(state,tab) {
             let index = state.editableTabs.findIndex(e=>e.name === tab.name)
-            if(index==-1){
+
+            if(index===-1){
                 state.editableTabs.push({
-                    title:tab.title,
-                    name:tab.name,
+                    title: tab.title,
+                    name: tab.name,
                 });
             }
-            state.editableTabsValue=tab.name;
+
+            state.editableTabsValue = tab.name;
         },
-        resetState:(state)=>{
-            state.menuList=[]
-            state.permList=[]
-            state.hasRoute=false
-            state.editableTabsValue="Index"
-            state.editableTabs=[{
+        resetState:(state) =>{
+            state.menuList = []
+            state.permList = []
+            state.hasRoute = []
+            state.editableTabsValue = 'Index'
+            state.editableTabs = [{
                 title:'首页',
-                name:'Index'
+                name:'Index',
             }]
         }
-
     },
-
     actions: {
     }
 }

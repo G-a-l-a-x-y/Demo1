@@ -1,5 +1,4 @@
 <template>
-
     <el-container>
         <el-aside width="200px">
             <side-menu></side-menu>
@@ -8,13 +7,14 @@
         <el-container>
             <el-header>
                 <div style="float: left;position: relative;left: 45%">
-                    <strong>VueManager后台管理系统 </strong>
+                    <strong>VueManager后台管理系统</strong>
                 </div>
                 <div class="header-avatar">
                     <el-avatar :src="userInfo.avatar"></el-avatar>
+
                     <el-dropdown>
                         <span class="el-dropdown-link">
-                            {{userInfo.username}}<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{userInfo.username}}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item>
@@ -29,24 +29,22 @@
 
             <el-main>
                 <tabs></tabs>
-                <div style="margin: 0 15px">
+                <div style="margin: 0 15px;">
                     <router-view/>
                 </div>
-
             </el-main>
+
         </el-container>
     </el-container>
-
 </template>
 
 <script>
-    import SideMenu from "./Inc/SideMenu";
-    import Tabs from "./Inc/Tabs";
-
+    import SideMenu from "./inc/SideMenu";
+    import Tabs from "./inc/Tabs";
     export default {
-        name: "Home",
+        name:"Home",
         components:{
-            SideMenu,Tabs
+            SideMenu, Tabs
         },
         data(){
             return{
@@ -62,19 +60,18 @@
         },
         methods:{
             getUserInfo(){
-                this.$axios.get('/sys/userInfo').then(res=>{
-                    this.userInfo=res.data.data
+                this.$axios.get('/sys/userInfo').then(res =>{
+                    this.userInfo = res.data.data
                 })
             },
             logout(){
-                this.$axios.post("/logout").then(res=>{
+                this.$axios.post("/logout").then(res =>{
                     localStorage.clear()
                     sessionStorage.clear()
 
                     this.$store.commit("resetState")
 
-
-                    this.$router.push("/login").catch(()=>{});
+                    this.$router.push("/login").catch(() => {});
                 })
             }
         }
@@ -123,12 +120,12 @@
     .el-main {
         color: #333;
         text-align: left;
+        /*line-height: 160px;*/
         padding: 0;
     }
 
-    .font-style{
-        font-size:15px;
-    }
+
+
 
     a{
         text-decoration: none;

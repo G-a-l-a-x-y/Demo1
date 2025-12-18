@@ -2,9 +2,10 @@
     <div>
         <el-form :inline="true">
             <el-form-item>
-                <el-button type="primary" @click="dialogVisible=true">新增</el-button>
+                <el-button type="primary" @click="dialogVisible = true">新增</el-button>
             </el-form-item>
         </el-form>
+
         <el-table
             :data="tableData"
             style="width: 100%;margin-bottom: 20px;"
@@ -76,8 +77,8 @@
                 <el-divider direction="vertical"></el-divider>
                 <template>
                     <el-popconfirm @confirm="delHandle(scope.row.id)"
-                            title="确定删除吗?"
-                    >
+                        title="确定删除吗？"
+                        >
                         <el-button type="text" slot="reference">删除</el-button>
                     </el-popconfirm>
                 </template>
@@ -157,37 +158,42 @@
 
 <script>
     export default {
-        name: "Menu.vue",
+        name: "Menu",
         data(){
             return{
-                dialogVisible:false,
+                dialogVisible: false,
                 editForm:{
-                    editFormRules: {
-                        parentId: [
-                            {required: true, message: '请选择上级菜单', trigger: 'blur'}
-                        ],
-                        name: [
-                            {required: true, message: '请输入名称', trigger: 'blur'}
-                        ],
-                        perms: [
-                            {required: true, message: '请输入权限编码', trigger: 'blur'}
-                        ],
-                        type: [
-                            {required: true, message: '请选择类型', trigger: 'blur'}
-                        ],
-                        orderNum: [
-                            {required: true, message: '请填入排序号', trigger: 'blur'}
-                        ],
-                        statu: [
-                            {required: true, message: '请选择状态', trigger: 'blur'}
-                        ]
-                    },
 
                 },
-                tableData: [
+                editFormRules: {
+                    component:[
+                        {required: true, message:'请选择填写菜单组件', trigger:'blur'}
+                    ],
+                    path:[
+                        {required: true, message:'请选择填写菜单URL', trigger:'blur'}
+                    ],
+                    parentId: [
+                        {required: true, message: '请选择上级菜单', trigger: 'blur'}
+                    ],
+                    name: [
+                        {required: true, message: '请输入名称', trigger: 'blur'}
+                    ],
+                    perms: [
+                        {required: true, message: '请输入权限编码', trigger: 'blur'}
+                    ],
+                    type: [
+                        {required: true, message: '请选择类型', trigger: 'blur'}
+                    ],
+                    orderNum: [
+                        {required: true, message: '请填入排序号', trigger: 'blur'}
+                    ],
+                    statu: [
+                        {required: true, message: '请选择状态', trigger: 'blur'}
+                    ]
+                },
 
+                tableData: []
 
-                ]
             }
         },
         created() {
@@ -195,8 +201,8 @@
         },
         methods:{
             getMenuTree(){
-                this.$axios.get('/sys/menu/list').then(res=>{
-                    this.tableData=res.data.data
+                this.$axios.get('/sys/menu/list').then(res =>{
+                    this.tableData = res.data.data
                 })
             },
             submitForm(formName){
@@ -227,32 +233,34 @@
                 });
             },
             editHandle(id){
-                this.$axios.get("/sys/menu/info/"+id).then(res=>{
-                    this.editForm=res.data.data
-                    this.dialogVisible=true
+                this.$axios.get('/sys/menu/info/'+id).then(res =>{
+                    this.editForm = res.data.data
+                    this.dialogVisible = true
                 })
             },
-            resetForm(formName){
+            resetForm(formName)  {
                 this.$refs[formName].resetFields();
-                this.dialogVisible=false
-                this.editForm={}
+                this.dialogVisible = false
+                this.editForm ={}
             },
             handleClose(){
                 this.resetForm('editForm')
             },
             delHandle(id){
-                this.$axios.post('/sys/menu/delete/'+id).then(res=>{
+                this.$axios.post('/sys/menu/delete/'+id).then(res =>{
                     this.$message({
-                        showClose:true,
-                        message:'删除成功',
-                        type:'success',
+                        showClose: true,
+                        message: '删除成功',
+                        type: 'success',
                         onClose:()=>{
                             this.getMenuTree()
                         }
-                    })
+                    });
                 })
             }
+
         }
+
     }
 </script>
 

@@ -4,13 +4,13 @@
             class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
-            active-text-color="#ffd04b">
-
+            active-text-color="#ffd04b"
+    >
         <router-link to="/index">
             <el-menu-item index="0" @click="selectMenu({name:'Index',title:'首页'})">
                 <template slot="title">
                     <i class="el-icon-s-home"></i>
-                    <span slot="title" style="..." class="font-style">首页</span>
+                    <span slot="title" style="color:yellow;" class="font-style">首页</span>
                 </template>
             </el-menu-item>
         </router-link>
@@ -62,6 +62,7 @@
     .el-menu-vertical-demo {
         height: 100%;
     }
+
     a{
         text-decoration: none;
     }
